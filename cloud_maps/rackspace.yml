@@ -1,0 +1,16 @@
+rackspace_compute_servers_server_map:
+  name: Rackspace.compute.servers Server Map
+  description: Imports all available servers from Rackspace cloud into local Server objects.
+  provider: Rackspace
+  service: compute
+  collection: servers
+  mappings: 
+    name: name
+    source_id: id
+    public_ip: addresses['public'][0]
+    private_ip: addresses['private'][0]
+    host_id: host_id
+    state: state 
+  keys: 
+    - name
+  object_type: Server

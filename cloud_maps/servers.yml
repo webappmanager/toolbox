@@ -1,3 +1,19 @@
+aws_compute_servers_server_map:
+  name: AWS.compute.servers Server Map
+  description: Imports all available servers from Amazon cloud into local Server objects.
+  provider: AWS
+  service: compute
+  collection: servers
+  mappings: 
+    source_id: id
+    name: dns_name
+    public_ip: public_ip_address
+    private_ip: private_ip_address
+    host_id: host_id
+    state: state 
+  keys: 
+    - name
+  object_type: Server
 rackspace_compute_servers_server_map:
   name: Rackspace.compute.servers Server Map
   description: Imports all available servers from Rackspace cloud into local Server objects.

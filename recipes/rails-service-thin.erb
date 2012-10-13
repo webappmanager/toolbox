@@ -3,10 +3,10 @@
 namespace :thin do
   desc "Restart the application"
   task :stop, :roles => :app, :except => { :no_release => true } do
-    run "cd #{current_path} && thin stop || true"
+    run "cd #{current_path} && bundle exec thin stop || true"
   end
   task :start, :roles => :app, :except => { :no_release => true } do
-    run "cd #{current_path} && thin start -e #{rails_env} -d <%= @app_environment['listen_port'] && '-p ' + @app_environment['listen_port'].to_s %>"
+    run "cd #{current_path} && bundle exec thin start -e #{rails_env} -d <%= @app_environment['listen_port'] && '-p ' + @app_environment['listen_port'].to_s %>"
   end
 end
  

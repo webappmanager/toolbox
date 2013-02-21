@@ -30,3 +30,18 @@ rackspace_compute_servers_server_map:
   keys: 
     - name
   object_type: Server
+rackspace_openstack_compute_servers_server_map:
+  name: Rackspace.compute.servers OpenStack Servers Map
+  description: Imports all available servers from Rackspace OpenStack cloud into local Server objects.
+  provider: Rackspace
+  service: compute_v2
+  collection: servers
+  mappings: 
+    name: name
+    source_id: id
+    public_ip: ipv4_address
+    host_id: host_id
+    state: state 
+  keys: 
+    - name
+  object_type: Server

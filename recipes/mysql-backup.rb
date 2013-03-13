@@ -1,7 +1,7 @@
 # Performs backup using mysqldump in an application shared directory
  
 # Application configuration
-set :application, "<%= @app.name %>"
+set :application, wam['app']['name']
 namespace :mysql do
   desc "Backup database"
  

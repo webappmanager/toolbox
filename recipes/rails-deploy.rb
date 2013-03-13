@@ -1,33 +1,21 @@
 # Recipe to deploy Rails applications using Webappmanager
 
 # Application configuration
-set :application, "<%= @app.name %>"
-set :rails_env, "<%= @app_environment['name'] %>"
+set :application, wam['app']['name']
+set :rails_env, wam['app']['environment']['name']
 
 # Version control system (:git,:svn...) configuration
-set :scm, "<%= @app['repository_type'] || ':git' %>"
-set :repository, "<%= @app['repository_location'] %>"
-set :branch, "<%= @app_environment['repository_branch'] || 'master' %>"
-
-<% unless @app['repository_user'].blank? %>
-set :scm_user, "<%= @app['repository_user'] %>"
-<% end %>
-
-<% unless @app['repository_password'].blank? %>
-set :scm_password, "<%= @app['repository_password'] %>"
-<% end %>
+set :scm, wam['app']['repository_type'] || ':git'
+set :scm_user, wam['app']['repository_user'] unless wam['app']['repository_user'].nil?
+set :scm_password, wam['app']['repository_password'] unless wam['app']['repository_password'].nil?
+set :repository, wam['app']['repository_location']
+set :branch, wam['app']['repository_branch'] || 'master'
 
 # Deploy transfer configuration (target path, user/password, ssh) 
-set :deploy_to, "<%= @app_environment['deploy_path']  %>" 
-
-<% unless @app_environment['deploy_user'].blank? %>
-set :user, "<%= @app_environment['deploy_user'] %>"
-<% end %> 
-
-<% unless @app_environment['deploy_password'].blank? %>
-set :password, "<%= @app_environment['deploy_password'] %>"
-<% end %> 
-set :deploy_via, "<%= @app_environment['deploy_via'] || 'remote_cache' %>"
+set :deploy_to, wam['app']['deploy_path'] 
+set :user, wam['app']['deploy_user'] unless wam['app']['deploy_user'].nil?
+set :password, wam['app']['deploy_password'] unless wam['app']['deploy_password'].nil?
+set :deploy_via, wam['app']['deploy_via'] || 'remote_cache'
 set :copy_cache, "/tmp/cap-deploy-cache/#{application}"
 set :copy_exclude, [".git", ".DS_Store", ".gitignore", ".gitmodules", ".svn", "**/.svn"]
 
@@ -40,8 +28,12 @@ set :normalize_asset_timestamps, false
 #`ssh-add`
 # set :ssh_options, { :forward_agent => true }
 
-# Retrieve servers linked to the application environment and prints them in Capistrano-readable format
-<%= @app_environment.servers_cap_format('public_ip') %>
+# Retrieve servers linked to the application and add to the recipe
+unless wam['app']['servers'].nil?
+  wam['app']['servers'].each do |s|
+    server s['address'], s['roles']
+  end
+end
 
 namespace :deploy do
   desc "Link shared files and directories / Install gems"

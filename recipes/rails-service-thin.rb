@@ -6,7 +6,7 @@ namespace :thin do
     run "cd #{current_path} && bundle exec thin stop || true"
   end
   task :start, :roles => :app, :except => { :no_release => true } do
-    run "cd #{current_path} && bundle exec thin start -e #{rails_env} -d <%= @app_environment['listen_port'] && '-p ' + @app_environment['listen_port'].to_s %>"
+    run "cd #{current_path} && bundle exec thin start -e #{rails_env} -d #{wam['app']['listen_port'] && '-p ' + wam['app']['listen_port']}"
   end
 end
  

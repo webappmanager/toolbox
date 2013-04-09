@@ -2,7 +2,7 @@
 
 # Application configuration
 set :application, wam['app']['name']
-set :rails_env, wam['app']['environment']['name']
+set :rails_env, wam['app']['rails_env'] || "development"
 
 # Version control system (:git,:svn...) configuration
 set :scm, wam['app']['repository_type'] || ':git'

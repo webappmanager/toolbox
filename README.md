@@ -6,6 +6,9 @@ Community commands, recipes, cloud maps, and more for Webappmanager application.
 Changelog
 =========
 
+0.0.5 - April 10 2013
+ * Fixing server definition in rails and tomcat deploys
+
 0.0.4 - March 13 2013
  * Removing ERB support and moving to ruby variable injection scheme to improve safety
  * Renaming the file extensions to reflect the ERB removal

@@ -31,7 +31,7 @@ set :normalize_asset_timestamps, false
 # Retrieve servers linked to the application and add to the recipe
 unless wam['app']['servers'].nil?
   wam['app']['servers'].each do |s|
-    server s['address'], s['roles']
+    server s['address'], *s['roles']
   end
 end
 

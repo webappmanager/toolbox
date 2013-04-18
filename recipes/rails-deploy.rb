@@ -1,4 +1,8 @@
+# Uncomment if you are using Rails' asset pipeline
+load 'deploy/assets'
+
 # Recipe to deploy Rails applications using Webappmanager
+require 'bundler/capistrano'
 
 # Application configuration
 set :application, wam['app']['name']
@@ -30,24 +34,40 @@ set :normalize_asset_timestamps, false
 
 # Retrieve servers linked to the application and add to the recipe
 unless wam['app']['servers'].nil?
+  logger.info("Adding Servers");
   wam['app']['servers'].each do |s|
-    server s['address'], *s['roles']
+    logger.info("Server:  #{s['address']}  Roles:  #{s['roles']}");
+    server s['address'], *eval(s['roles'])
   end
 end
 
 namespace :deploy do
   desc "Link shared files and directories / Install gems"
-  task :bundle_install do
+  task :run_after_update do
     # Link release directories to shared directories
+    logger.info("Creating links for shared resources");
     dir_list = ["vendor/bundle", "db/store"]
     run dir_list.map{|d| "mkdir -p #{shared_path}/#{d} && ln -nfs #{shared_path}/#{d} #{release_path}/#{d}"}.join("; ")
 
     # replace built-in bundler call
-    run "cd #{current_path} && bundle install --deployment"
+    # logger.info("Installing bundler");
+    # run "cd #{current_path} && bundle install --deployment"
+    
+    # migrate the db
+    # run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake db:migrate"
+    
   end
+  task :link_db do
+    logger.info("Creating link for database.yml");
+    run "ln -nfs #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
+  end
+  before "deploy:assets:precompile", "deploy:link_db"
 end
 
+
+
+
 # Setup installation directory if first deploy
-after "deploy:update", "deploy:bundle_install"
-after "deploy", "deploy:migrate"
+after "deploy:update", "deploy:run_after_update"
+#after "deploy", "deploy:migrate"
 after "deploy", "deploy:cleanup"

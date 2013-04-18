@@ -6,6 +6,12 @@ Community commands, recipes, cloud maps, and more for Webappmanager application.
 Changelog
 =========
 
+0.0.6 - April 17 2013
+ * Adding recipe for Puma server management.
+ * Adding recipe for PostgreSQL database management.
+ * Adding recipe for Chef-Solo server provisioning.
+ * Fixing cap-scp recipe to support new number of arguments.
+
 0.0.5 - April 10 2013
  * Fixing server definition in rails and tomcat deploys
 

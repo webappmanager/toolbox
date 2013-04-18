@@ -1,7 +1,6 @@
-# Deploy application
+# Start puma service
 
-#include recipe:cap-scp
 #include recipe:rails-deploy
 #include recipe:rails-service-puma
 
-cap deploy
+cap puma:start

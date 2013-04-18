@@ -8,8 +8,8 @@ module UseScpForDeployment
     base.send(:alias_method, :upload,     :new_upload)
   end
  
-  def new_upload(from, to)
-    old_upload(from, to, :via => :scp)
+  def new_upload(from, to, options = {}, &block)
+    old_upload(from, to, options.merge(:via => :scp), &block)
   end
 end
 Capistrano::Configuration.send(:include, UseScpForDeployment)

@@ -1,19 +1,24 @@
-# Performs backup using mysqldump in an application shared directory
- 
+# Performs database backup using mysqldump in an application shared directory
+# Adapted from http://36zeroes.blogspot.com/2011/11/backup-database-before-deployment-using.html
+
 # Application configuration
 set :application, wam['app']['name']
+set :db_user, wam['app']['db_user']
+set :db_pass, wam['app']['db_pass']
+set :db_name, wam['app']['db_name']
+
 namespace :mysql do
-  desc "Backup database"
- 
+  desc "Backup database with mysqldump in app shared directory"
+
   task :backup, :roles => :db, :only => { :primary => true } do
+    run "mkdir -p #{shared_path}/backups"
     filename = "#{application}.db_backup.#{Time.now.to_f}.sql.bz2"
-    filepath = "#{shared_path}/#{filename}"
-    text = capture "cat #{deploy_to}/current/config/database.yml"
-    yaml = YAML::load(text)
- 
+    filepath = "#{shared_path}/backups/#{filename}"
+
     on_rollback { run "rm #{filepath}" }
-    run "mysqldump -u #{yaml['production']['username']} -p #{yaml['production']['database']} | bzip2 -c > #{filepath}" do |ch, stream, out|
-      ch.send_data "#{yaml['production']['password']}\n" if out =~ /^Enter password:/
-    end
+
+    run "mysqldump -u#{db_user} -p#{db_pass} #{db_name} | bzip2 -c > #{filepath}"
   end
 end
+
+before :deploy, 'mysql:backup'
